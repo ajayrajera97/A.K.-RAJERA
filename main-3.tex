@@ -1,0 +1,287 @@
+\documentclass[aspectratio=169,mathserif,11pt]{beamer}
+%\usefonttheme{professionalfonts}
+%\usefonttheme{serif}
+\usepackage{hyperref}
+%\usepackage[T1]{fontenc}
+\UseRawInputEncoding
+
+% Cannot enable in Xelatex
+\usepackage{pgfpages}
+% \setbeameroption{hide notes} % Only slides
+% \setbeameroption{show only notes} % Only notes
+% \setbeameroption{show notes on second screen}
+\usepackage[style=alphabetic, backend=bibtex, giveninits=true, maxbibnames=99]{biblatex}
+\DeclareNameAlias{default}{last-first}
+\renewbibmacro{in:}{} % Remove "In:" before journal title
+\DeclareFieldFormat{pages}{#1} % Remove "pp." before page numbers
+\DeclareFieldFormat[article, inbook, incollection, inproceedings, thesis, misc]{title}{#1} % Remove quotation marks around titles
+\DeclareFieldFormat[article]{volume}{\mkbibbold{#1}} % Suppress "Volume" for articles
+\DeclareFieldFormat[article]{number}{\mkbibparens{#1}}% Suppress "number" for articles
+\renewcommand*{\newunitpunct}{\addspace\addcolon\space}% Add a space between volume and number
+%\renewbibmacro*{date}{\printdate}% Change the format of the date
+\DeclareFieldFormat[book]{edition}{}% Suppress "edition" for books
+\AtEveryBibitem{\ifentrytype{incollection}{\clearname{editor}}{}} % Suppress "editor" for incollection
+\addbibresource{reference_9_sem.bib}
+\usepackage{filecontents}
+% other packages
+\usepackage{latexsym,amsmath,xcolor,multicol,booktabs,calligra,multirow}
+\usepackage{graphicx}
+%\usepackage[capbesideposition=right]{floatrow}
+\usepackage{rotating}
+\usepackage{tikz}
+\usetikzlibrary{arrows, arrows.meta}
+\usetikzlibrary{patterns, patterns.meta}
+\usetikzlibrary {3d}
+\usetikzlibrary{snakes}
+\usepackage{etoolbox}
+\usepackage{tabularx}
+\usepackage{array}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\usepackage{caption}
+%\usepackage{subfigure}
+\usepackage{subcaption}
+%% Enable only in Xelatex
+% \usepackage{pstricks}
+
+\title{{\rm Existence, Uniqueness and Regularity of  Solutions to the 3D Navier--Stokes Equations: Understanding Singularities}}
+%\subtitle{Presentation}
+\author[{\rm Ajay Kumar}]{
+\centering
+\includegraphics[width=0.1\linewidth]{mnit.jpg}\\
+\vspace{0.1cm}
+Ajay Kumar\\ {\footnotesize(2025RMA9073)} \\
+\hspace{-0.3cm} {\small Sumbitted to:} \hspace{5.1cm} {\small Sumbitted by:} \\
+\hspace{-0.75cm} Dr. Manish Kumar \hspace{4.5cm} Ajay Kumar\\
+}
+\institute [MNIT Jaipur] {Department of Mathematics \\ \vspace{0.05cm} Malaviya National Institute of Technology Jaipur} \vspace{-0.1cm}
+
+\usepackage{trial_theme}
+
+% defs
+\def\cmd#1{\texttt{\color{red}\footnotesize $\backslash$#1}}
+\def\env#1{\texttt{\color{blue}\footnotesize #1}}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{halfgray}{gray}{0.55}
+
+
+
+\begin{document}
+\hspace*{-3cm}    \verb|\rmfamily|: \rmfamily
+\begin{frame}[plain]
+\vspace{0.2cm}
+%\centering { \small \textit{Semester Progess Report} }
+\titlepage
+%\vspace{0.1cm}
+%\begin{center}
+% $68^{\text{th}}$ Conference of the ISTAM
+%Pre-Ph.D.  Open Seminar  on
+% \vspace*{-0.2cm}
+%\end{center}
+% \titlepage
+% \vspace{-4cm}
+\end{frame}
+
+
+ \begin{frame}{Introduction}
+     The Navier--Stokes equations describe the motion of viscous, incompressible fluids and
+form the cornerstone of fluid dynamics. They model diverse phenomena such as air
+flow, ocean currents, and blood circulation. Despite their seemingly simple appearance,
+these equations pose deep mathematical challenges in three dimensions. The central
+open question is whether smooth, globally defined solutions always exist or whether
+singularities points where velocity or pressure become infinite, can develop in finite
+time.\\
+The problem of proving the existence, uniqueness, and regularity of solutions
+in three dimensions is one of the seven Clay Mathematics Institute Millennium Prize
+Problems. Solving it would significantly advance our understanding of turbulence and
+the mathematical structure of fluid motion.
+
+ \end{frame}
+ \begin{frame}{Mathematical Background}
+    The incompressible Navier--Stokes equations in vector form are:
+\[
+\rho\left( \frac{\partial \mathbf{u}}{\partial t} + (\mathbf{u}\cdot\nabla)\mathbf{u} \right)
+= -\nabla p + \mu \nabla^{2}\mathbf{u} + \mathbf{f},\\ 
+\hspace{5.5cm}\nabla \cdot\mathbf{u}=0,
+\]\\
+where:
+\begin{itemize}
+    \item $\mathbf{u}$ -- Velocity vector,
+    \item $p$ -- Pressure,
+    \item $\rho$ -- Density,
+    \item $\mu$ -- Dynamic viscosity,
+    \item $\mathbf{f}$ -- External body forces such as gravity.
+\end{itemize}  
+ \end{frame}
+ \begin{frame}{The Main Mathematical Questions Are}{Existence:}
+     \textbf  {Do solutions always exist for all time?}\\
+We know that solutions exist for a short time (weak solutions).\\ 
+But we don't know if a smooth solution continues to exist forever when the fluid becomes very turbulent.\\
+    \textbf{The Problem:}\\
+    The equations might produce extremely large velocities or infinite values in a finite time.
+ \end{frame}
+ \begin{frame}{The Main Mathematical Questions Are}{Uniqueness:}
+  \textbf{Is the solution one-of-a-kind?}\\
+  Even if a solution exists, we do not know whether it is the only solution.\\
+In very chaotic flows, it is possible that two different solutions may satisfy the equations with the same starting conditions.\\
+\textbf{This is not yet proven.} 
+ \end{frame}
+ \begin{frame}{The Main Mathematical Questions Are}{Regularity:}
+\textbf{ Is the solution always smooth (no infinite spikes or jumps)?}\\
+Regularity means:
+  \begin{itemize}
+      \item No blow-up of velocity.
+      \item No infinite energy.
+      \item No sudden singularities.
+  \end{itemize}
+In 3D, it is unknown whether the velocity field always remains smooth.
+If smoothness breaks, the solution forms a singularity.    
+\end{frame}
+\begin{frame}{Why the Problem Is Difficult}
+\textbf{The main challenges are:}
+\begin{itemize}
+    \item The nonlinear convection term $ (\mathbf{u}\cdot\nabla)\mathbf{u}$ can amplify small disturbances.
+     \item Vorticity stretching in $3D$ can potentially cause blow-up.
+      \item The diffusion term  $ \nu \nabla^{2}\mathbf{u} $ must control the nonlinear growth, but it is not always clear if it succeeds.
+
+\end{itemize}
+In $2D$, vorticity cannot be stretched, so solutions stay regular for all time. This difference makes the $3D$ case much harder.
+\end{frame}
+    \begin{frame}{Known Results}
+    \begin{itemize}
+        \item \textbf{Local existence:} Smooth solutions exist for short time for any smooth initial data.
+         \item \textbf{Global weak solutions (Leray–Hopf):} Proven to exist for all time, but may not be smooth.
+         \item \textbf{Energy inequality:} Ensures basic control over weak solutions.
+         \end{itemize}
+\textbf{Main unknown:} Do these weak solutions become smooth? Or can singularities form?
+    
+        
+    \end{frame}
+    \begin{frame}{Singularities}
+    \textbf{What Are Singularities?}\\
+    
+    A singularity occurs when:\\
+    \begin{itemize}
+        \item Velocity $\lvert u \rvert$ becomes infinite, or
+        \item Derivatives like $\nabla u $ blow up, causing infinite energy concentration.
+    
+      \end{itemize} 
+      \textbf{Why Singularities Matter}
+      \begin{itemize}
+          \item If singularities form, global smooth solutions cannot exist.
+          \item Without smoothness, we lose control over the model’s predictability.
+          \item The Clay Millennium Prize Problem asks if solutions:
+          \begin{itemize}
+              \item Stay smooth forever, OR
+              \item Become singular in finite time.
+          \end{itemize}
+      \end{itemize}
+    \end{frame}
+    \begin{frame}{Why 2D Has No Singularities but 3D Might}
+    \textbf{In $2D:$}\\
+    \begin{itemize}
+        \item vorticity cannot stretch,
+        \item stays bounded,
+        \item smoothness stays forever,
+        \item no singularities.
+    \end{itemize}
+    \textbf{In $3D:$}\\
+    The vorticity stretching mechanism may amplify rotation without bound.  
+Mathematically, this effect appears in the nonlinear term
+\[
+(\boldsymbol{\omega} \cdot \nabla)\mathbf{u},
+\]
+which represents the stretching of vorticity by the velocity gradient.  
+Uncontrolled growth of this term is one possible route to singularity formation.      
+    \end{frame}
+    \begin{frame}{Smooth Initial Data Hypothesis}
+
+Assume the initial velocity field satisfies
+\[
+\mathbf{u}_0(x) \in C^{\infty}(\mathbb{R}^3),
+\qquad 
+\nabla \cdot \mathbf{u}_0 = 0.
+\]
+
+\noindent
+\textbf{The question:} Does this smoothness persist for all future times?
+
+\medskip
+
+\noindent
+\textbf{Reason:}  
+\begin{itemize}
+    \item If the initial data is already rough, then singularities could appear trivially.
+    \item The real challenge is to determine whether initially smooth data can develop a
+    finite-time blow-up in the incompressible Navier--Stokes equations.
+\end{itemize}
+\end{frame}
+\begin{frame} {Regularity Criteria Hypothesis}
+Assume certain norms of the velocity field remain finite.  
+A classical example is the\\
+\textbf{Prodi--Serrin condition}:\\
+
+\[
+\mathbf{u} \in L^{p}(0,T; L^{q}(\mathbb{R}^3)), 
+\qquad 
+\frac{2}{p} + \frac{3}{q} = 1,
+\qquad 
+q > 3,
+\]
+
+then the solution remains smooth on the interval \([0,T]\).
+
+\medskip
+
+\noindent
+\textbf{Idea:}
+     If the velocity field is sufficiently "controlled" in certain space--time norms, then no singularity can form, and the solution stays smooth.
+\end{frame}
+ \begin{frame}{Energy Inequality Hypothesis (Leray--Hopf Framework)}
+
+Any weak solution must satisfy the energy inequality
+\[
+\| \mathbf{u}(t) \|_{L^2}^2 
+\;+\;
+2\nu \int_0^{t} 
+\| \nabla \mathbf{u}(s) \|_{L^2}^2 \, ds
+\;\le\;
+\| \mathbf{u}_0 \|_{L^2}^2 .
+\]
+
+\medskip
+
+\noindent
+\textbf{Purpose:}
+\begin{itemize}
+    \item Prevents energy blow-up.
+    \item Ensures minimal physical dissipation.
+    \item Used to construct global weak (Leray--Hopf) solutions.
+\end{itemize}
+\end{frame}
+\begin{frame}{Conclusion}
+    The 3D Navier–Stokes equations pose a major unsolved challenge in mathematics. The core question is whether smooth solutions remain regular for all time or develop singularities. Understanding existence, uniqueness, and regularity would resolve a Millennium Prize problem and deepen our knowledge of turbulence and real fluid behavior.
+        
+    
+
+ \end{frame}
+    \begin{frame}{Active researchers}
+    \textbf{Alexey Cheskidov and  Mimi Dai (jun 2025)}\\
+    They recently published a paper presenting improved regularity criteria for 3D Navier--Stokes / MHD systems -- giving conditions under which blow-up can be ruled out.    
+    \end{frame}
+    \begin{frame}{References}
+        \begin{itemize}
+            \item Leray, J. (1934). “Essai sur le mouvement d’un liquide visqueux emplissant l’espace.” Acta Mathematica, 63(1), 193–248.
+            \item Ladyzhenskaya, O. A. (1963). The Mathematical Theory of Viscous  Incompressible Flow. Gordon and Breach.
+            \item Serrin, J. (1962). “On the interior regularity of weak solutions of the Navier--Stokesequations.” Archive for Rational Mechanics and Analysis, 9, 187–195.
+            \item Caffarelli, L., Kohn, R., and Nirenberg, L. (1982). “Partial regularity of suitable weak solutions of the Navier--Stokes equations.”Communications on Pure and Applied Mathematics, 35(6), 771–831.
+        \item Fefferman, C. L. (2006). “Existence and Smoothness of the Navier--Stokes Equation.” The Clay Mathematics Institute Millennium Prize Problem.
+        \end{itemize}
+    \end{frame}  
+    \begin{frame}
+    \centering
+    {\Huge \textbf{THANK YOU}}
+ \end{frame}
+
+\end{document}
